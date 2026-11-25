@@ -10,3 +10,9 @@
 - Prompt: Build single-file MotoParts app where any user with an account can sign in/register, post preloved motor parts to Sell, Trade, or Give away with compatible motorcycle model and condition, and lock claimed/purchased parts immediately in localStorage.
 - Result: Created index.html with Rider Account Access, Sell/Trade/Give posting form, preloved parts grid, immediate locking on claim, and localStorage persistence.
 - Verified: Registered users can post parts; claiming a part marks it Locked/Taken and disables the button across refresh.
+- Commit: c61bef8
+
+## 3 — Add motorcycle model search and Sell/Trade/Give filter
+- Prompt: Add a search bar for part names or compatible motorcycle models and a dropdown filter for All, Sell, Trade, and Give Away listings.
+- Result: Added searchInput and filterTypeSelect controls and updated renderParts() to filter displayed cards in real time.
+- Verified: Typing a motorcycle model or selecting Sell/Trade/Give filters the marketplace listings immediately.

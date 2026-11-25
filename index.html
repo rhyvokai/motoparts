@@ -127,6 +127,12 @@
       gap: 0.75rem;
     }
 
+    @media (max-width: 600px) {
+      .row-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .btn {
       display: inline-block;
       width: 100%;
@@ -374,9 +380,18 @@
       </section>
     </div>
 
-    <!-- MARKETPLACE LISTINGS -->
+    <!-- MARKETPLACE LISTINGS WITH SEARCH & TYPE FILTER -->
     <section class="card">
       <h2>Available Preloved Motorcycle Parts</h2>
+      <div class="row-2" style="margin-bottom: 0.75rem;">
+        <input type="text" id="searchInput" placeholder="Search part name or motorcycle model (e.g., Click 125i)..." />
+        <select id="filterTypeSelect">
+          <option value="All">All Listing Types (Sell, Trade, Give)</option>
+          <option value="Sell">Sell Only</option>
+          <option value="Trade">Trade Only</option>
+          <option value="Give">Give Away (Free) Only</option>
+        </select>
+      </div>
       <div class="feedback" id="marketFeedback" style="margin-top: 0; margin-bottom: 0.4rem;"></div>
       <div class="parts-grid" id="partsGrid"></div>
     </section>
@@ -390,6 +405,12 @@
     let users = [];
     let currentUser = null;
     let parts = [];
+
+    const searchInputEl = document.getElementById("searchInput");
+    const filterTypeSelectEl = document.getElementById("filterTypeSelect");
+
+    searchInputEl.addEventListener("input", renderParts);
+    filterTypeSelectEl.addEventListener("change", renderParts);
 
     // Load initial demo accounts and preloved motorcycle parts from localStorage
     function loadState() {
@@ -618,7 +639,7 @@
       showFeedback("marketFeedback", `Success! "${part.partName}" is now reserved/locked for ${currentUser.name}.`, false);
     }
 
-    // Render all preloved parts (claimed items become gray and unclickable)
+    // Render filtered preloved parts (claimed items become gray and unclickable)
     function renderParts() {
       const grid = document.getElementById("partsGrid");
       if (parts.length === 0) {
@@ -626,7 +647,24 @@
         return;
       }
 
-      grid.innerHTML = parts
+      const query = searchInputEl.value.trim().toLowerCase();
+      const typeFilter = filterTypeSelectEl.value;
+
+      const filtered = parts.filter((p) => {
+        const matchesType = typeFilter === "All" || p.listingType === typeFilter;
+        const matchesText =
+          !query ||
+          p.partName.toLowerCase().includes(query) ||
+          p.bikeModel.toLowerCase().includes(query);
+        return matchesType && matchesText;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<p class="empty-note">No preloved parts match your search or filter.</p>`;
+        return;
+      }
+
+      grid.innerHTML = filtered
         .map((p) => {
           const typeClass =
             p.listingType === "Sell"
