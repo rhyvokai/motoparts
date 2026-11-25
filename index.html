@@ -650,6 +650,18 @@
       showFeedback("marketFeedback", `Success! "${part.partName}" is now reserved/locked for ${currentUser.name}.`, false);
     }
 
+    // Allow account owners to remove their own unclaimed listings
+    function deletePart(partId) {
+      const part = parts.find((p) => p.id === partId);
+      if (!part || part.claimed) return;
+      if (!currentUser || part.sellerId !== currentUser.id) return;
+
+      parts = parts.filter((p) => p.id !== partId);
+      saveState();
+      renderParts();
+      showFeedback("marketFeedback", `Removed "${part.partName}" from listings.`, false);
+    }
+
     // Render filtered preloved parts (claimed items become gray and unclickable)
     function renderParts() {
       const grid = document.getElementById("partsGrid");
@@ -736,6 +748,11 @@
                 >
                   ${btnLabel}
                 </button>
+                ${
+                  isOwn && !p.claimed
+                    ? `<button type="button" class="btn btn-outline" onclick="deletePart('${p.id}')">Remove Listing</button>`
+                    : ""
+                }
               </div>
             </div>
           `;

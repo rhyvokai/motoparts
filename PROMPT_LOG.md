@@ -22,3 +22,9 @@
 - Prompt: Validate that part name and motorcycle model have at least 2 characters and prevent the same rider from posting duplicate active listings for the exact same part and model.
 - Result: Added 2-character minimum checks and a duplicate active listing check in the postPartForm submit handler.
 - Verified: Submitting 1-character inputs or duplicate active listings for the same rider shows an error message.
+- Commit: 56a5d4b
+
+## 5 — Allow riders to remove their own unclaimed listings
+- Prompt: Add a deletePart() function and a Remove Listing button on unclaimed cards belonging to the currently signed-in rider.
+- Result: Added deletePart(partId) and rendered a Remove Listing button below Your Posted Part for unclaimed listings owned by currentUser.
+- Verified: Clicking Remove Listing deletes the user's unclaimed part and updates localStorage; claimed parts cannot be deleted.
