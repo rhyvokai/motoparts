@@ -218,7 +218,7 @@
     .part-card.claimed {
       background: #f1f3f5;
       border-color: #d2d6dc;
-      opacity: 0.78;
+      opacity: 0.85;
     }
 
     .badge-row {
@@ -662,6 +662,19 @@
       showFeedback("marketFeedback", `Removed "${part.partName}" from listings.`, false);
     }
 
+    // Allow account owners to reopen a claimed/locked listing if a buyer or trader backs out
+    function reopenPart(partId) {
+      const part = parts.find((p) => p.id === partId);
+      if (!part || !part.claimed) return;
+      if (!currentUser || part.sellerId !== currentUser.id) return;
+
+      part.claimed = false;
+      part.claimedBy = "";
+      saveState();
+      renderParts();
+      showFeedback("marketFeedback", `Reopened "${part.partName}" as Available again.`, false);
+    }
+
     // Render filtered preloved parts (claimed items become gray and unclickable)
     function renderParts() {
       const grid = document.getElementById("partsGrid");
@@ -751,6 +764,11 @@
                 ${
                   isOwn && !p.claimed
                     ? `<button type="button" class="btn btn-outline" onclick="deletePart('${p.id}')">Remove Listing</button>`
+                    : ""
+                }
+                ${
+                  isOwn && p.claimed
+                    ? `<button type="button" class="btn btn-outline" onclick="reopenPart('${p.id}')">Reopen Listing</button>`
                     : ""
                 }
               </div>
