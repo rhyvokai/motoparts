@@ -16,3 +16,9 @@
 - Prompt: Add a search bar for part names or compatible motorcycle models and a dropdown filter for All, Sell, Trade, and Give Away listings.
 - Result: Added searchInput and filterTypeSelect controls and updated renderParts() to filter displayed cards in real time.
 - Verified: Typing a motorcycle model or selecting Sell/Trade/Give filters the marketplace listings immediately.
+- Commit: ebb322e
+
+## 4 — Add duplicate active listing guard and minimum length validation
+- Prompt: Validate that part name and motorcycle model have at least 2 characters and prevent the same rider from posting duplicate active listings for the exact same part and model.
+- Result: Added 2-character minimum checks and a duplicate active listing check in the postPartForm submit handler.
+- Verified: Submitting 1-character inputs or duplicate active listings for the same rider shows an error message.

@@ -587,14 +587,25 @@
       const price = parseFloat(document.getElementById("partPrice").value);
       const tradeNote = document.getElementById("tradeNote").value.trim();
 
-      if (!partName || !bikeModel) {
-        return showFeedback("postFeedback", "Part name and compatible motorcycle model are required.", true);
+      if (partName.length < 2 || bikeModel.length < 2) {
+        return showFeedback("postFeedback", "Part name and compatible motorcycle model must be at least 2 characters.", true);
       }
       if (listingType === "Sell" && (isNaN(price) || price <= 0)) {
         return showFeedback("postFeedback", "Please enter a valid preloved price greater than ₱0.", true);
       }
-      if (listingType === "Trade" && !tradeNote) {
+      if (listingType === "Trade" && tradeNote.length < 2) {
         return showFeedback("postFeedback", "Please specify what item you want to trade for.", true);
+      }
+
+      const duplicate = parts.some(
+        (p) =>
+          !p.claimed &&
+          p.sellerId === currentUser.id &&
+          p.partName.toLowerCase() === partName.toLowerCase() &&
+          p.bikeModel.toLowerCase() === bikeModel.toLowerCase()
+      );
+      if (duplicate) {
+        return showFeedback("postFeedback", "You already have an active listing for this exact part and motorcycle model.", true);
       }
 
       parts.unshift({
